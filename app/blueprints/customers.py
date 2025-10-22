@@ -1,0 +1,57 @@
+from flask import Blueprint, render_template, request, redirect, url_for, flash
+from app.db_connect import get_db
+
+customers = Blueprint('customers', __name__)
+
+@customers.route('/', methods=['GET', 'POST'])
+def show_customers():
+    db = get_db()
+    cursor = db.cursor()
+
+    # Handle POST request to add a new customer
+    if request.method == 'POST':
+        name = request.form['name']
+        phone = request.form['phone']
+        email = request.form['email']
+
+        # Insert the new customer into the database
+        cursor.execute('INSERT INTO customer (name, phone, email) VALUES (%s, %s, %s)',
+                       (name, phone, email))
+        db.commit()
+
+        flash('New customer added successfully!', 'success')
+        return redirect(url_for('customers.show_customers'))
+
+    # Handle GET request to display all customers
+    cursor.execute('SELECT * FROM customer')
+    all_customers = cursor.fetchall()
+    return render_template('customers.html', all_customers=all_customers)
+
+@customers.route('/update_customer/<int:customer_id>', methods=['POST'])
+def update_customer(customer_id):
+    db = get_db()
+    cursor = db.cursor()
+
+    # Update the customer's details
+    name = request.form['name']
+    phone = request.form['phone']
+    email = request.form['email']
+
+    cursor.execute('UPDATE customer SET name = %s, phone = %s, email = %s WHERE customer_id = %s',
+                   (name, phone, email, customer_id))
+    db.commit()
+
+    flash('Customer updated successfully!', 'success')
+    return redirect(url_for('customers.show_customers'))
+
+@customers.route('/delete_customer/<int:customer_id>', methods=['POST'])
+def delete_customer(customer_id):
+    db = get_db()
+    cursor = db.cursor()
+
+    # Delete the customer
+    cursor.execute('DELETE FROM customer WHERE customer_id = %s', (customer_id,))
+    db.commit()
+
+    flash('Customer deleted successfully!', 'danger')
+    return redirect(url_for('customers.show_customers'))

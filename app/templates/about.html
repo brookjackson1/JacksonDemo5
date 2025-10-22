@@ -1,7 +1,89 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h1>About</h1>
-<br>
-<p>This website is designed to display example data tables using Pandas and Flask operations. Users can perform basic CRUD operations to add, manipulate, and sort records. A calculation of average points per player will also be available.</p>
+<div class="container">
+    <div class="card shadow-lg p-5 mb-5">
+        <h1 class="mb-4">
+            <i class="fas fa-info-circle me-3"></i>About the Pizza Management System
+        </h1>
+
+        <div class="row">
+            <div class="col-md-12 mb-4">
+                <h3 class="mb-3">Project Overview</h3>
+                <p>This Pizza Management System is a comprehensive web application built using Flask and MySQL, demonstrating professional database design and full-stack web development practices. The application provides complete CRUD (Create, Read, Update, Delete) operations across multiple related database tables.</p>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6 mb-4">
+                <h3 class="mb-3">Features</h3>
+                <ul class="list-group">
+                    <li class="list-group-item">
+                        <i class="fas fa-users text-primary me-2"></i>
+                        <strong>Customer Management:</strong> Track customer information including names, phone numbers, and email addresses
+                    </li>
+                    <li class="list-group-item">
+                        <i class="fas fa-pizza-slice text-success me-2"></i>
+                        <strong>Pizza Inventory:</strong> Manage pizza varieties with different sizes, pricing, and cost tracking for profit analysis
+                    </li>
+                    <li class="list-group-item">
+                        <i class="fas fa-shopping-cart text-danger me-2"></i>
+                        <strong>Order Processing:</strong> Create and manage orders with multiple line items, quantities, and automatic total calculations
+                    </li>
+                    <li class="list-group-item">
+                        <i class="fas fa-list text-info me-2"></i>
+                        <strong>Order Details:</strong> Track individual items within each order with pizza selection and quantity management
+                    </li>
+                </ul>
+            </div>
+
+            <div class="col-md-6 mb-4">
+                <h3 class="mb-3">Technical Stack</h3>
+                <ul class="list-group">
+                    <li class="list-group-item">
+                        <i class="fab fa-python text-primary me-2"></i>
+                        <strong>Backend:</strong> Python Flask framework
+                    </li>
+                    <li class="list-group-item">
+                        <i class="fas fa-database text-success me-2"></i>
+                        <strong>Database:</strong> MySQL with foreign key relationships
+                    </li>
+                    <li class="list-group-item">
+                        <i class="fab fa-bootstrap text-primary me-2"></i>
+                        <strong>Frontend:</strong> Bootstrap 5 with responsive design
+                    </li>
+                    <li class="list-group-item">
+                        <i class="fas fa-window-restore text-info me-2"></i>
+                        <strong>UI Components:</strong> Modal dialogs and dropdown menus for enhanced UX
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12 mb-4">
+                <h3 class="mb-3">Database Schema</h3>
+                <p>The system uses a normalized relational database with five interconnected tables:</p>
+                <ul>
+                    <li><strong>Customer:</strong> Stores customer information</li>
+                    <li><strong>Pizza:</strong> Contains pizza varieties with pricing and cost data</li>
+                    <li><strong>Order:</strong> Records order header information linked to customers</li>
+                    <li><strong>Order_Detail:</strong> Maintains line items for each order with quantities</li>
+                    <li><strong>Employee:</strong> Manages user authentication and access</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <h3 class="mb-3">Georgia College & State University</h3>
+                <p>This project was developed as part of the Management Information Systems program at Georgia College & State University. GCSU's MIS program prepares students with practical skills in software development, database design, and modern web technologies for business applications.</p>
+                <p class="text-muted mb-0">
+                    <i class="fas fa-graduation-cap me-2"></i>
+                    Georgia College & State University | Milledgeville, Georgia
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}

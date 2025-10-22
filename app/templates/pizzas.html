@@ -1,0 +1,159 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1>Pizzas</h1>
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addPizzaModal">
+        Add New Pizza
+    </button>
+
+    <!-- Table displaying all pizzas -->
+    <table class="table table-striped mt-4">
+        <thead>
+            <tr>
+                <th>Pizza ID</th>
+                <th>Name</th>
+                <th>Size</th>
+                <th>Price</th>
+                <th>Cost</th>
+                <th>Profit Margin</th>
+                <th>Created At</th>
+                <th>Updated At</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for pizza in all_pizzas %}
+            <tr>
+                <td>{{ pizza.pizza_id }}</td>
+                <td>{{ pizza.name }}</td>
+                <td>{{ pizza.size }}</td>
+                <td>${{ "%.2f"|format(pizza.price) }}</td>
+                <td>${{ "%.2f"|format(pizza.cost) }}</td>
+                <td>${{ "%.2f"|format(pizza.price - pizza.cost) }}</td>
+                <td>{{ pizza.created_at }}</td>
+                <td>{{ pizza.updated_at }}</td>
+                <td>
+                    <button type="button" class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#editPizzaModal{{ pizza.pizza_id }}">
+                        Edit
+                    </button>
+                    <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deletePizzaModal{{ pizza.pizza_id }}">
+                        Delete
+                    </button>
+                </td>
+            </tr>
+
+            <!-- Edit Pizza Modal -->
+            <div class="modal fade" id="editPizzaModal{{ pizza.pizza_id }}" tabindex="-1" aria-labelledby="editPizzaModalLabel{{ pizza.pizza_id }}" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="editPizzaModalLabel{{ pizza.pizza_id }}">Edit Pizza</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <form method="post" action="{{ url_for('pizzas.update_pizza', pizza_id=pizza.pizza_id) }}">
+                            <div class="modal-body">
+                                <div class="mb-3">
+                                    <label for="name" class="form-label">Pizza Name</label>
+                                    <input type="text" class="form-control" name="name" value="{{ pizza.name }}" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="size" class="form-label">Size</label>
+                                    <select class="form-select" name="size" required>
+                                        <option value="Small" {% if pizza.size == 'Small' %}selected{% endif %}>Small</option>
+                                        <option value="Medium" {% if pizza.size == 'Medium' %}selected{% endif %}>Medium</option>
+                                        <option value="Large" {% if pizza.size == 'Large' %}selected{% endif %}>Large</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="price" class="form-label">Price ($)</label>
+                                    <input type="number" step="0.01" class="form-control" name="price" value="{{ pizza.price }}" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="cost" class="form-label">Cost ($)</label>
+                                    <input type="number" step="0.01" class="form-control" name="cost" value="{{ pizza.cost }}" required>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                <button type="submit" class="btn btn-warning">Save Changes</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Delete Pizza Modal -->
+            <div class="modal fade" id="deletePizzaModal{{ pizza.pizza_id }}" tabindex="-1" aria-labelledby="deletePizzaModalLabel{{ pizza.pizza_id }}" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="deletePizzaModalLabel{{ pizza.pizza_id }}">Delete Pizza</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            Are you sure you want to delete <strong>{{ pizza.name }} ({{ pizza.size }})</strong>?
+                            <div class="mt-3 text-muted small">
+                                <p>Pizza Details:</p>
+                                <ul>
+                                    <li>Price: ${{ "%.2f"|format(pizza.price) }}</li>
+                                    <li>Cost: ${{ "%.2f"|format(pizza.cost) }}</li>
+                                    <li>Profit: ${{ "%.2f"|format(pizza.price - pizza.cost) }}</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <form method="post" action="{{ url_for('pizzas.delete_pizza', pizza_id=pizza.pizza_id) }}">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                <button type="submit" class="btn btn-danger">Delete</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<!-- Add Pizza Modal -->
+<div class="modal fade" id="addPizzaModal" tabindex="-1" aria-labelledby="addPizzaModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addPizzaModalLabel">Add New Pizza</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form method="post" action="{{ url_for('pizzas.show_pizzas') }}">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="name" class="form-label">Pizza Name *</label>
+                        <input type="text" class="form-control" name="name" required placeholder="e.g., Margherita, Pepperoni">
+                    </div>
+                    <div class="mb-3">
+                        <label for="size" class="form-label">Size *</label>
+                        <select class="form-select" name="size" required>
+                            <option value="">Select a size...</option>
+                            <option value="Small">Small</option>
+                            <option value="Medium">Medium</option>
+                            <option value="Large">Large</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="price" class="form-label">Price ($) *</label>
+                        <input type="number" step="0.01" class="form-control" name="price" required placeholder="0.00">
+                    </div>
+                    <div class="mb-3">
+                        <label for="cost" class="form-label">Cost ($) *</label>
+                        <input type="number" step="0.01" class="form-control" name="cost" required placeholder="0.00">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Add Pizza</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

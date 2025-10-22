@@ -5,44 +5,59 @@
 <div class="text-center">
     <div class="card shadow-lg p-5 mb-5">
         <h1 class="display-4 mb-3">
-            <i class="fas fa-graduation-cap me-3"></i>Georgia College & State University
+            <i class="fas fa-pizza-slice me-3"></i>Pizza Management System
         </h1>
-        <h2 class="h3 text-muted mb-4">MIS Flask Starter Kit</h2>
-        
-        <p class="lead mb-4">Welcome to GCSU's Flask development environment! This starter kit provides a foundation for building web applications using Python and Flask.</p>
-        
+        <h2 class="h3 text-muted mb-4">GCSU MIS Database Application</h2>
+
+        <p class="lead mb-4">Welcome to the Pizza Management System! A comprehensive web application for managing pizza orders, customers, and inventory built with Flask and MySQL.</p>
+
         <div class="row justify-content-center mb-4">
             <div class="col-md-10">
-                <p class="mb-0">Georgia College & State University, located in Milledgeville, Georgia, is a public liberal arts university known for its commitment to undergraduate education and student success. Our MIS program prepares students with practical skills in software development, data analysis, and modern web technologies for business applications.</p>
+                <p class="mb-0">This application demonstrates modern database design and web development practices, featuring full CRUD operations across multiple related tables with foreign key relationships and cascading operations.</p>
             </div>
         </div>
-        
+
         <div class="row justify-content-center">
-            <div class="col-md-6 mb-3">
+            <div class="col-md-4 mb-3">
                 <div class="card h-100">
                     <div class="card-body text-center">
-                        <i class="fas fa-code fa-3x mb-3" style="color: var(--gcsu-blue);"></i>
-                        <h5 class="card-title">Modern Development</h5>
-                        <p class="card-text">Built with Flask, Bootstrap, and modern web technologies for responsive design.</p>
+                        <i class="fas fa-users fa-3x mb-3" style="color: var(--gcsu-blue);"></i>
+                        <h5 class="card-title">Customer Management</h5>
+                        <p class="card-text">Track customer information including contact details and order history.</p>
                     </div>
                 </div>
             </div>
-            <div class="col-md-6 mb-3">
+            <div class="col-md-4 mb-3">
                 <div class="card h-100">
                     <div class="card-body text-center">
-                        <i class="fas fa-database fa-3x mb-3" style="color: var(--gcsu-green);"></i>
-                        <h5 class="card-title">Database Ready</h5>
-                        <p class="card-text">Pre-configured for MySQL/PostgreSQL with example CRUD operations.</p>
+                        <i class="fas fa-pizza-slice fa-3x mb-3" style="color: var(--gcsu-green);"></i>
+                        <h5 class="card-title">Pizza Inventory</h5>
+                        <p class="card-text">Manage pizza varieties, sizes, pricing, and cost information for profit tracking.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-3">
+                <div class="card h-100">
+                    <div class="card-body text-center">
+                        <i class="fas fa-shopping-cart fa-3x mb-3" style="color: #dc3545;"></i>
+                        <h5 class="card-title">Order Processing</h5>
+                        <p class="card-text">Complete order management with line items, quantities, and real-time totals.</p>
                     </div>
                 </div>
             </div>
         </div>
-        
+
         <div class="mt-4">
-            <a href="{{ url_for('examples.show_examples') }}" class="btn btn-primary btn-lg me-3">
-                <i class="fas fa-eye me-2"></i>View Examples
+            <a href="{{ url_for('customers.show_customers') }}" class="btn btn-primary btn-lg me-2 mb-2">
+                <i class="fas fa-users me-2"></i>Customers
             </a>
-            <a href="{{ url_for('about') }}" class="btn btn-outline-secondary btn-lg">
+            <a href="{{ url_for('pizzas.show_pizzas') }}" class="btn btn-primary btn-lg me-2 mb-2">
+                <i class="fas fa-pizza-slice me-2"></i>Pizzas
+            </a>
+            <a href="{{ url_for('orders.show_orders') }}" class="btn btn-primary btn-lg me-2 mb-2">
+                <i class="fas fa-shopping-cart me-2"></i>Orders
+            </a>
+            <a href="{{ url_for('about') }}" class="btn btn-outline-secondary btn-lg mb-2">
                 <i class="fas fa-info-circle me-2"></i>Learn More
             </a>
         </div>
