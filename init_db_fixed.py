@@ -1,6 +1,6 @@
 """
-Database initialization script for Heroku ClearDB
-This script creates all tables and populates them with sample data
+Database initialization script - Fixed version
+Creates tables first, then inserts data
 """
 import pymysql
 import os
@@ -44,33 +44,33 @@ def init_database():
     try:
         print("Creating database tables...")
 
-        # Read and execute schema.sql
-        with open('database/schema.sql', 'r') as f:
+        # Read schema.sql
+        with open('database/schema.sql', 'r', encoding='utf-8') as f:
             schema_sql = f.read()
 
-        # Execute each statement separately
-        for statement in schema_sql.split(';'):
-            statement = statement.strip()
-            if statement and not statement.startswith('--'):
+        # Execute schema creation
+        statements = [s.strip() for s in schema_sql.split(';') if s.strip() and not s.strip().startswith('--')]
+        for statement in statements:
+            if statement:
                 cursor.execute(statement)
 
         conn.commit()
-        print("Tables created successfully")
+        print("Tables created successfully!")
 
         print("Inserting sample data...")
 
-        # Read and execute seed_data.sql
-        with open('database/seed_data.sql', 'r') as f:
+        # Read seed_data.sql
+        with open('database/seed_data.sql', 'r', encoding='utf-8') as f:
             seed_sql = f.read()
 
-        # Execute each statement separately
-        for statement in seed_sql.split(';'):
-            statement = statement.strip()
-            if statement and not statement.startswith('--'):
+        # Execute seed data insertion
+        statements = [s.strip() for s in seed_sql.split(';') if s.strip() and not s.strip().startswith('--')]
+        for statement in statements:
+            if statement:
                 cursor.execute(statement)
 
         conn.commit()
-        print("Sample data inserted successfully")
+        print("Sample data inserted successfully!")
         print("\nDatabase initialization complete!")
         print("\nDefault login credentials:")
         print("  Username: admin")
@@ -78,8 +78,9 @@ def init_database():
 
     except Exception as e:
         print(f"Error initializing database: {e}")
+        import traceback
+        traceback.print_exc()
         conn.rollback()
-        raise
     finally:
         cursor.close()
         conn.close()
