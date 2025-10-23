@@ -11,12 +11,14 @@ def get_db():
     if 'db' not in g or not is_connection_open(g.db):
         print("Re-establishing closed database connection.")
         try:
-            # Check if CLEARDB_DATABASE_URL exists (Heroku ClearDB)
+            # Check for Heroku database URLs (JawsDB or ClearDB)
+            jawsdb_url = os.getenv('JAWSDB_URL')
             cleardb_url = os.getenv('CLEARDB_DATABASE_URL')
+            heroku_db_url = jawsdb_url or cleardb_url
 
-            if cleardb_url:
-                # Parse ClearDB URL: mysql://user:password@host/database
-                url = urlparse(cleardb_url)
+            if heroku_db_url:
+                # Parse Heroku database URL: mysql://user:password@host/database
+                url = urlparse(heroku_db_url)
                 g.db = pymysql.connect(
                     host=url.hostname,
                     user=url.username,
@@ -25,7 +27,8 @@ def get_db():
                     port=url.port or 3306,
                     cursorclass=pymysql.cursors.DictCursor
                 )
-                print("Connected to Heroku ClearDB")
+                db_type = "JawsDB" if jawsdb_url else "ClearDB"
+                print(f"Connected to Heroku {db_type}")
             else:
                 # Use individual environment variables (local development)
                 g.db = pymysql.connect(

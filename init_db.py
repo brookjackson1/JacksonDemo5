@@ -11,11 +11,14 @@ load_dotenv()
 
 def get_connection():
     """Get database connection from environment variables"""
+    # Check for Heroku database URLs (JawsDB or ClearDB)
+    jawsdb_url = os.getenv('JAWSDB_URL')
     cleardb_url = os.getenv('CLEARDB_DATABASE_URL')
+    heroku_db_url = jawsdb_url or cleardb_url
 
-    if cleardb_url:
-        # Parse ClearDB URL for Heroku
-        url = urlparse(cleardb_url)
+    if heroku_db_url:
+        # Parse Heroku database URL
+        url = urlparse(heroku_db_url)
         return pymysql.connect(
             host=url.hostname,
             user=url.username,
