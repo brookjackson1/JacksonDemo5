@@ -21,8 +21,18 @@ def index():
 def dashboard():
     from app.db_connect import get_db
     from datetime import datetime
+    from flask import flash
 
     db = get_db()
+    if db is None:
+        flash('Database connection failed. Please check your configuration.', 'error')
+        return render_template('dashboard.html',
+                             customer_count=0,
+                             total_sales=0,
+                             pizza_count=0,
+                             recent_orders=[],
+                             current_year=datetime.now().year)
+
     cursor = db.cursor()
 
     # Get total customers
