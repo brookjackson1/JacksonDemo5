@@ -20,6 +20,10 @@ def process_login():
     password = request.form['password']
 
     db = get_db()
+    if db is None:
+        flash('Database connection error. Please contact support.', 'danger')
+        return redirect(url_for('index'))
+
     cursor = db.cursor()
 
     # Get employee from database
