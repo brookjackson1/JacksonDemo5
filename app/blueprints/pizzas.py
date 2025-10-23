@@ -1,9 +1,11 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash
 from app.db_connect import get_db
+from app.blueprints.auth import login_required
 
 pizzas = Blueprint('pizzas', __name__)
 
 @pizzas.route('/', methods=['GET', 'POST'])
+@login_required
 def show_pizzas():
     db = get_db()
     cursor = db.cursor()
@@ -29,6 +31,7 @@ def show_pizzas():
     return render_template('pizzas.html', all_pizzas=all_pizzas)
 
 @pizzas.route('/update_pizza/<int:pizza_id>', methods=['POST'])
+@login_required
 def update_pizza(pizza_id):
     db = get_db()
     cursor = db.cursor()
@@ -47,6 +50,7 @@ def update_pizza(pizza_id):
     return redirect(url_for('pizzas.show_pizzas'))
 
 @pizzas.route('/delete_pizza/<int:pizza_id>', methods=['POST'])
+@login_required
 def delete_pizza(pizza_id):
     db = get_db()
     cursor = db.cursor()

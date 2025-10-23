@@ -1,0 +1,119 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-10">
+        <h2 class="mb-4">
+            <i class="fas fa-user-circle me-2"></i>Employee Profile
+        </h2>
+
+        <!-- Employee Information Card -->
+        <div class="card mb-4">
+            <div class="card-header" style="background: linear-gradient(90deg, var(--gcsu-blue), var(--gcsu-green)); color: white;">
+                <h5 class="mb-0"><i class="fas fa-id-badge me-2"></i>Personal Information</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label text-muted">Employee ID</label>
+                        <p class="h5">#{{ employee.user_id }}</p>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label text-muted">Username</label>
+                        <p class="h5">{{ employee.username }}</p>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label text-muted">First Name</label>
+                        <p class="h5">{{ employee.first_name }}</p>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label text-muted">Last Name</label>
+                        <p class="h5">{{ employee.last_name }}</p>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label text-muted">Account Created</label>
+                        <p class="h5">{{ employee.created_at.strftime('%Y-%m-%d %H:%M') if employee.created_at else 'N/A' }}</p>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label text-muted">Last Updated</label>
+                        <p class="h5">{{ employee.updated_at.strftime('%Y-%m-%d %H:%M') if employee.updated_at else 'N/A' }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Login History Card -->
+        <div class="card">
+            <div class="card-header" style="background: linear-gradient(90deg, var(--gcsu-blue), var(--gcsu-green)); color: white;">
+                <h5 class="mb-0"><i class="fas fa-history me-2"></i>Recent Login Activity</h5>
+            </div>
+            <div class="card-body">
+                {% if login_history %}
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Date & Time</th>
+                                <th>IP Address</th>
+                                <th>Browser / Device</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for login in login_history %}
+                            <tr>
+                                <td>
+                                    <i class="fas fa-calendar-alt me-2 text-primary"></i>
+                                    {{ login.login_timestamp.strftime('%Y-%m-%d %H:%M:%S') }}
+                                </td>
+                                <td>
+                                    <i class="fas fa-network-wired me-2 text-success"></i>
+                                    {{ login.ip_address or 'Unknown' }}
+                                </td>
+                                <td>
+                                    <i class="fas fa-desktop me-2 text-info"></i>
+                                    <small>{{ login.user_agent[:80] if login.user_agent else 'Unknown' }}{% if login.user_agent and login.user_agent|length > 80 %}...{% endif %}</small>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <p class="text-muted mb-0 mt-3">
+                    <i class="fas fa-info-circle me-2"></i>
+                    Showing last 10 login sessions
+                </p>
+                {% else %}
+                <p class="text-center text-muted mb-0">
+                    <i class="fas fa-exclamation-circle me-2"></i>
+                    No login history available
+                </p>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Back Button -->
+        <div class="mt-4 text-center">
+            <a href="{{ url_for('dashboard') }}" class="btn btn-primary">
+                <i class="fas fa-arrow-left me-2"></i>Back to Dashboard
+            </a>
+        </div>
+    </div>
+</div>
+
+<style>
+    .card-header h5 {
+        color: white !important;
+    }
+
+    .form-label {
+        font-size: 0.875rem;
+        font-weight: 600;
+        margin-bottom: 0.25rem;
+    }
+
+    .h5 {
+        color: var(--gcsu-blue);
+        margin-bottom: 0;
+    }
+</style>
+{% endblock %}

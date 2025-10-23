@@ -1,87 +1,151 @@
 {% extends "base.html" %}
 
 {% block content %}
-
-<div class="text-center">
-    <div class="card shadow-lg p-5 mb-5">
-        <h1 class="display-4 mb-3">
-            <i class="fas fa-pizza-slice me-3"></i>Pizza Management System
-        </h1>
-        <h2 class="h3 text-muted mb-4">GCSU MIS Database Application</h2>
-
-        <p class="lead mb-4">Welcome to the Pizza Management System! A comprehensive web application for managing pizza orders, customers, and inventory built with Flask and MySQL.</p>
-
-        <div class="row justify-content-center mb-4">
-            <div class="col-md-10">
-                <p class="mb-0">This application demonstrates modern database design and web development practices, featuring full CRUD operations across multiple related tables with foreign key relationships and cascading operations.</p>
-            </div>
-        </div>
-
-        <div class="row justify-content-center">
-            <div class="col-md-4 mb-3">
-                <div class="card h-100">
-                    <div class="card-body text-center">
-                        <i class="fas fa-users fa-3x mb-3" style="color: var(--gcsu-blue);"></i>
-                        <h5 class="card-title">Customer Management</h5>
-                        <p class="card-text">Track customer information including contact details and order history.</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4 mb-3">
-                <div class="card h-100">
-                    <div class="card-body text-center">
-                        <i class="fas fa-pizza-slice fa-3x mb-3" style="color: var(--gcsu-green);"></i>
-                        <h5 class="card-title">Pizza Inventory</h5>
-                        <p class="card-text">Manage pizza varieties, sizes, pricing, and cost information for profit tracking.</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4 mb-3">
-                <div class="card h-100">
-                    <div class="card-body text-center">
-                        <i class="fas fa-shopping-cart fa-3x mb-3" style="color: #dc3545;"></i>
-                        <h5 class="card-title">Order Processing</h5>
-                        <p class="card-text">Complete order management with line items, quantities, and real-time totals.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="mt-4">
-            <a href="{{ url_for('customers.show_customers') }}" class="btn btn-primary btn-lg me-2 mb-2">
-                <i class="fas fa-users me-2"></i>Customers
-            </a>
-            <a href="{{ url_for('pizzas.show_pizzas') }}" class="btn btn-primary btn-lg me-2 mb-2">
-                <i class="fas fa-pizza-slice me-2"></i>Pizzas
-            </a>
-            <a href="{{ url_for('orders.show_orders') }}" class="btn btn-primary btn-lg me-2 mb-2">
-                <i class="fas fa-shopping-cart me-2"></i>Orders
-            </a>
-            <a href="{{ url_for('about') }}" class="btn btn-outline-secondary btn-lg mb-2">
-                <i class="fas fa-info-circle me-2"></i>Learn More
-            </a>
-        </div>
-    </div>
-</div>
-
 <style>
-    .card {
+    body {
+        background: linear-gradient(135deg, var(--gcsu-light-blue) 0%, #ffffff 50%, var(--gcsu-light-green) 100%);
+        min-height: 100vh;
+    }
+
+    .login-container {
+        max-width: 450px;
+        margin: 50px auto;
+        padding: 20px;
+    }
+
+    .login-card {
         background: rgba(255, 255, 255, 0.95);
         backdrop-filter: blur(10px);
+        border: none;
+        border-radius: 20px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        overflow: hidden;
     }
-    
-    .btn-outline-secondary {
-        border-color: var(--gcsu-blue);
+
+    .login-header {
+        background: linear-gradient(90deg, var(--gcsu-blue) 0%, var(--gcsu-green) 100%);
+        color: white;
+        padding: 2rem;
+        text-align: center;
+    }
+
+    .login-header i {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+    }
+
+    .login-header h2 {
+        margin: 0;
+        font-size: 1.8rem;
+        font-weight: 600;
+        color: white;
+    }
+
+    .login-body {
+        padding: 2.5rem;
+    }
+
+    .form-label {
+        font-weight: 600;
         color: var(--gcsu-blue);
     }
-    
-    .btn-outline-secondary:hover {
-        background-color: var(--gcsu-blue);
+
+    .form-control {
+        border-radius: 10px;
+        padding: 0.75rem;
+        border: 2px solid #e0e0e0;
+        transition: all 0.3s ease;
+    }
+
+    .form-control:focus {
         border-color: var(--gcsu-blue);
+        box-shadow: 0 0 0 0.2rem rgba(0, 51, 153, 0.25);
+    }
+
+    .btn-login {
+        background: linear-gradient(45deg, var(--gcsu-blue), var(--gcsu-green));
+        border: none;
+        border-radius: 10px;
+        padding: 0.75rem;
+        font-weight: 600;
+        font-size: 1.1rem;
+        width: 100%;
         color: white;
+        transition: all 0.3s ease;
+    }
+
+    .btn-login:hover {
         transform: translateY(-2px);
-        box-shadow: 0 4px 8px rgba(0, 51, 153, 0.3);
+        box-shadow: 0 5px 15px rgba(0, 51, 153, 0.3);
+    }
+
+    .input-group-text {
+        background: white;
+        border: 2px solid #e0e0e0;
+        border-right: none;
+        border-radius: 10px 0 0 10px;
+    }
+
+    .input-group .form-control {
+        border-left: none;
+        border-radius: 0 10px 10px 0;
     }
 </style>
 
+<div class="login-container">
+    <div class="card login-card">
+        <div class="login-header">
+            <i class="fas fa-pizza-slice"></i>
+            <h2>Pizza Management System</h2>
+            <p class="mb-0">Employee Login</p>
+        </div>
+        <div class="login-body">
+            <form method="POST" action="{{ url_for('index') }}">
+                <div class="mb-4">
+                    <label for="username" class="form-label">
+                        <i class="fas fa-user me-2"></i>Username
+                    </label>
+                    <div class="input-group">
+                        <span class="input-group-text">
+                            <i class="fas fa-user text-muted"></i>
+                        </span>
+                        <input type="text" class="form-control" id="username" name="username"
+                               placeholder="Enter your username" value="admin" required autofocus>
+                    </div>
+                </div>
+                <div class="mb-4">
+                    <label for="password" class="form-label">
+                        <i class="fas fa-lock me-2"></i>Password
+                    </label>
+                    <div class="input-group">
+                        <span class="input-group-text">
+                            <i class="fas fa-lock text-muted"></i>
+                        </span>
+                        <input type="password" class="form-control" id="password" name="password"
+                               placeholder="Enter your password" value="admin123" required>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-login">
+                    <i class="fas fa-sign-in-alt me-2"></i>Login
+                </button>
+            </form>
+
+            <div class="mt-4 p-3" style="background: #f8f9fa; border-radius: 10px;">
+                <p class="text-center mb-2" style="color: var(--gcsu-blue); font-weight: 600;">
+                    <i class="fas fa-info-circle me-2"></i>Demo Credentials
+                </p>
+                <div class="row text-center">
+                    <div class="col-12">
+                        <small class="text-muted">Username:</small><br>
+                        <strong style="color: var(--gcsu-blue); font-size: 1.1rem;">admin</strong>
+                    </div>
+                    <div class="col-12 mt-2">
+                        <small class="text-muted">Password:</small><br>
+                        <strong style="color: var(--gcsu-green); font-size: 1.1rem;">admin123</strong>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}

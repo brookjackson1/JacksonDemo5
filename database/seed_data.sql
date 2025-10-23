@@ -29,10 +29,10 @@ INSERT INTO pizza (name, size, price, cost) VALUES
 
 -- Insert sample employees
 INSERT INTO employee (username, first_name, last_name, password) VALUES
-('admin', 'Admin', 'User', 'hashed_password_1'),
-('jsmith', 'John', 'Smith', 'hashed_password_2'),
-('mdavis', 'Mary', 'Davis', 'hashed_password_3'),
-('rjones', 'Robert', 'Jones', 'hashed_password_4');
+('admin', 'Admin', 'User', 'admin123'),
+('jsmith', 'John', 'Smith', 'password123'),
+('mdavis', 'Mary', 'Davis', 'password123'),
+('rjones', 'Robert', 'Jones', 'password123');
 
 -- Insert sample orders
 INSERT INTO `order` (customer_id, date) VALUES

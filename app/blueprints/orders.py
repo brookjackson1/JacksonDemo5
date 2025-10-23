@@ -1,9 +1,11 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash
 from app.db_connect import get_db
+from app.blueprints.auth import login_required
 
 orders = Blueprint('orders', __name__)
 
 @orders.route('/', methods=['GET', 'POST'])
+@login_required
 def show_orders():
     db = get_db()
     cursor = db.cursor()
@@ -38,6 +40,7 @@ def show_orders():
     return render_template('orders.html', all_orders=all_orders, all_customers=all_customers)
 
 @orders.route('/update_order/<int:order_id>', methods=['POST'])
+@login_required
 def update_order(order_id):
     db = get_db()
     cursor = db.cursor()
@@ -54,6 +57,7 @@ def update_order(order_id):
     return redirect(url_for('orders.show_orders'))
 
 @orders.route('/delete_order/<int:order_id>', methods=['POST'])
+@login_required
 def delete_order(order_id):
     db = get_db()
     cursor = db.cursor()
@@ -69,6 +73,7 @@ def delete_order(order_id):
     return redirect(url_for('orders.show_orders'))
 
 @orders.route('/details/<int:order_id>')
+@login_required
 def order_details(order_id):
     db = get_db()
     cursor = db.cursor()
@@ -100,13 +105,18 @@ def order_details(order_id):
     cursor.execute('SELECT pizza_id, name, size, price FROM pizza ORDER BY name, size')
     all_pizzas = cursor.fetchall()
 
-    # Calculate total
-    total = sum(detail['subtotal'] for detail in order_details)
+    # Calculate totals
+    from decimal import Decimal
+    subtotal = sum(detail['subtotal'] for detail in order_details)
+    tax_rate = Decimal('0.07')  # 7% sales tax
+    tax = subtotal * tax_rate
+    total = subtotal + tax
 
     return render_template('order_details.html', order=order, order_details=order_details,
-                         all_pizzas=all_pizzas, total=total)
+                         all_pizzas=all_pizzas, subtotal=subtotal, tax=tax, total=total, tax_rate=tax_rate)
 
 @orders.route('/details/<int:order_id>/add', methods=['POST'])
+@login_required
 def add_order_detail(order_id):
     db = get_db()
     cursor = db.cursor()
@@ -123,6 +133,7 @@ def add_order_detail(order_id):
     return redirect(url_for('orders.order_details', order_id=order_id))
 
 @orders.route('/details/update/<int:order_detail_id>', methods=['POST'])
+@login_required
 def update_order_detail(order_detail_id):
     db = get_db()
     cursor = db.cursor()
@@ -139,6 +150,7 @@ def update_order_detail(order_detail_id):
     return redirect(url_for('orders.order_details', order_id=order_id))
 
 @orders.route('/details/delete/<int:order_detail_id>', methods=['POST'])
+@login_required
 def delete_order_detail(order_detail_id):
     db = get_db()
     cursor = db.cursor()

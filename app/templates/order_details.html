@@ -109,6 +109,14 @@
             {% endfor %}
         </tbody>
         <tfoot>
+            <tr>
+                <td colspan="5" class="text-end"><strong>Subtotal:</strong></td>
+                <td colspan="2"><strong>${{ "%.2f"|format(subtotal) }}</strong></td>
+            </tr>
+            <tr>
+                <td colspan="5" class="text-end"><strong>Sales Tax ({{ (tax_rate * 100)|int }}%):</strong></td>
+                <td colspan="2"><strong>${{ "%.2f"|format(tax) }}</strong></td>
+            </tr>
             <tr class="table-dark">
                 <td colspan="5" class="text-end"><strong>Total:</strong></td>
                 <td colspan="2"><strong>${{ "%.2f"|format(total) }}</strong></td>

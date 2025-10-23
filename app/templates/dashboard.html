@@ -1,0 +1,234 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="text-center">
+    <div class="card shadow-lg p-5 mb-5">
+        <h1 class="display-4 mb-3">
+            <i class="fas fa-pizza-slice me-3"></i>Pizza Management Dashboard
+        </h1>
+        <h2 class="h3 text-muted mb-4">Welcome, {{ session.get('first_name') }} {{ session.get('last_name') }}!</h2>
+
+        <p class="lead mb-4">Manage your pizza business operations from this central dashboard. Access customers, inventory, and orders all in one place.</p>
+
+        <!-- Stats Cards -->
+        <div class="row justify-content-center mb-4">
+            <div class="col-md-4 mb-3">
+                <div class="card stats-card">
+                    <div class="card-body text-center">
+                        <i class="fas fa-dollar-sign fa-3x mb-3" style="color: var(--success-green);"></i>
+                        <h3 class="mb-0">${{ "%.2f"|format(total_sales) }}</h3>
+                        <p class="text-muted mb-0">Total Sales {{ current_year }}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-3">
+                <div class="card stats-card">
+                    <div class="card-body text-center">
+                        <i class="fas fa-users fa-3x mb-3" style="color: var(--primary-navy);"></i>
+                        <h3 class="mb-0">{{ customer_count }}</h3>
+                        <p class="text-muted mb-0">Total Customers</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-3">
+                <div class="card stats-card">
+                    <div class="card-body text-center">
+                        <i class="fas fa-pizza-slice fa-3x mb-3" style="color: var(--accent-teal);"></i>
+                        <h3 class="mb-0">{{ pizza_count }}</h3>
+                        <p class="text-muted mb-0">Pizza Varieties</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row justify-content-center">
+            <div class="col-md-4 mb-3">
+                <div class="card h-100 dashboard-card">
+                    <div class="card-body text-center">
+                        <i class="fas fa-users fa-3x mb-3" style="color: var(--primary-navy);"></i>
+                        <h5 class="card-title">Customer Management</h5>
+                        <p class="card-text">Track customer information including contact details and order history.</p>
+                        <a href="{{ url_for('customers.show_customers') }}" class="btn btn-primary mt-2">
+                            <i class="fas fa-users me-2"></i>Manage Customers
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-3">
+                <div class="card h-100 dashboard-card">
+                    <div class="card-body text-center">
+                        <i class="fas fa-pizza-slice fa-3x mb-3" style="color: var(--accent-teal);"></i>
+                        <h5 class="card-title">Pizza Inventory</h5>
+                        <p class="card-text">Manage pizza varieties, sizes, pricing, and cost information for profit tracking.</p>
+                        <a href="{{ url_for('pizzas.show_pizzas') }}" class="btn btn-primary mt-2">
+                            <i class="fas fa-pizza-slice me-2"></i>Manage Pizzas
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-3">
+                <div class="card h-100 dashboard-card">
+                    <div class="card-body text-center">
+                        <i class="fas fa-shopping-cart fa-3x mb-3" style="color: #dc3545;"></i>
+                        <h5 class="card-title">Order Processing</h5>
+                        <p class="card-text">Complete order management with line items, quantities, and real-time totals.</p>
+                        <a href="{{ url_for('orders.show_orders') }}" class="btn btn-primary mt-2">
+                            <i class="fas fa-shopping-cart me-2"></i>Manage Orders
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Orders Table -->
+        <div class="row justify-content-center mt-4">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title mb-3">
+                            <i class="fas fa-clock me-2"></i>Recent Orders
+                        </h5>
+                        {% if recent_orders %}
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Order ID</th>
+                                        <th>Date</th>
+                                        <th>Customer</th>
+                                        <th>Items</th>
+                                        <th>Total</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for order in recent_orders %}
+                                    <tr>
+                                        <td><strong>#{{ order.order_id }}</strong></td>
+                                        <td>{{ order.date.strftime('%Y-%m-%d') }}</td>
+                                        <td>{{ order.customer_name }}</td>
+                                        <td>{{ order.item_count }} item(s)</td>
+                                        <td><strong>${{ "%.2f"|format(order.order_total) }}</strong></td>
+                                        <td>
+                                            <a href="{{ url_for('orders.order_details', order_id=order.order_id) }}"
+                                               class="btn btn-sm btn-outline-primary">
+                                                <i class="fas fa-eye me-1"></i>View
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                        {% else %}
+                        <p class="text-center text-muted mb-0">No orders yet. Create your first order to get started!</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row justify-content-center mt-4">
+            <div class="col-md-12">
+                <div class="card dashboard-stats">
+                    <div class="card-body">
+                        <h5 class="card-title mb-3">
+                            <i class="fas fa-chart-line me-2"></i>Quick Actions
+                        </h5>
+                        <div class="d-flex justify-content-center flex-wrap gap-2">
+                            <a href="{{ url_for('customers.show_customers') }}" class="btn btn-outline-primary">
+                                <i class="fas fa-user-plus me-2"></i>Add Customer
+                            </a>
+                            <a href="{{ url_for('pizzas.show_pizzas') }}" class="btn btn-outline-success">
+                                <i class="fas fa-plus-circle me-2"></i>Add Pizza
+                            </a>
+                            <a href="{{ url_for('orders.show_orders') }}" class="btn btn-outline-danger">
+                                <i class="fas fa-cart-plus me-2"></i>New Order
+                            </a>
+                            <a href="{{ url_for('about') }}" class="btn btn-outline-info">
+                                <i class="fas fa-info-circle me-2"></i>About System
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .card {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+    }
+
+    .stats-card {
+        transition: all 0.3s ease;
+        border: 2px solid #e0e0e0;
+        background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+    }
+
+    .stats-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        border-color: var(--primary-navy);
+    }
+
+    .stats-card h3 {
+        color: var(--primary-navy);
+        font-weight: bold;
+        font-size: 2.5rem;
+    }
+
+    .dashboard-card {
+        transition: all 0.3s ease;
+        border: 2px solid transparent;
+    }
+
+    .dashboard-card:hover {
+        transform: translateY(-10px);
+        border-color: var(--primary-navy);
+        box-shadow: 0 8px 25px rgba(30, 58, 95, 0.3);
+    }
+
+    .dashboard-stats {
+        background: linear-gradient(135deg, #ecf0f1 0%, #d5dbdb 100%);
+    }
+
+    .btn-outline-primary {
+        border-color: var(--primary-navy);
+        color: var(--primary-navy);
+    }
+
+    .btn-outline-primary:hover {
+        background-color: var(--primary-navy);
+        border-color: var(--primary-navy);
+        color: white;
+    }
+
+    .btn-outline-success {
+        border-color: var(--success-green);
+        color: var(--success-green);
+    }
+
+    .btn-outline-success:hover {
+        background-color: var(--success-green);
+        border-color: var(--success-green);
+        color: white;
+    }
+
+    .btn-outline-danger:hover {
+        background-color: #dc3545;
+        border-color: #dc3545;
+        color: white;
+    }
+
+    .btn-outline-info:hover {
+        background-color: #17a2b8;
+        border-color: #17a2b8;
+        color: white;
+    }
+</style>
+
+{% endblock %}

@@ -1,9 +1,11 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash
 from app.db_connect import get_db
+from app.blueprints.auth import login_required
 
 customers = Blueprint('customers', __name__)
 
 @customers.route('/', methods=['GET', 'POST'])
+@login_required
 def show_customers():
     db = get_db()
     cursor = db.cursor()
@@ -28,6 +30,7 @@ def show_customers():
     return render_template('customers.html', all_customers=all_customers)
 
 @customers.route('/update_customer/<int:customer_id>', methods=['POST'])
+@login_required
 def update_customer(customer_id):
     db = get_db()
     cursor = db.cursor()
@@ -45,6 +48,7 @@ def update_customer(customer_id):
     return redirect(url_for('customers.show_customers'))
 
 @customers.route('/delete_customer/<int:customer_id>', methods=['POST'])
+@login_required
 def delete_customer(customer_id):
     db = get_db()
     cursor = db.cursor()
