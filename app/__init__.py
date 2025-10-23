@@ -1,9 +1,10 @@
 from flask import Flask, g, session
 from .app_factory import create_app
 from .db_connect import close_db, get_db
+import os
 
 app = create_app()
-app.secret_key = 'your-secret'  # Replace with an environment
+app.secret_key = os.environ.get('SECRET_KEY', 'dev-secret-key-change-in-production')
 
 # Register Blueprints
 from app.blueprints.auth import auth
