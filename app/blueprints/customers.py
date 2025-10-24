@@ -24,8 +24,8 @@ def show_customers():
         flash('New customer added successfully!', 'success')
         return redirect(url_for('customers.show_customers'))
 
-    # Handle GET request to display all customers
-    cursor.execute('SELECT * FROM customer')
+    # Handle GET request to display all non-archived customers
+    cursor.execute('SELECT * FROM customer WHERE is_archived = FALSE')
     all_customers = cursor.fetchall()
     return render_template('customers.html', all_customers=all_customers)
 
@@ -53,9 +53,9 @@ def delete_customer(customer_id):
     db = get_db()
     cursor = db.cursor()
 
-    # Delete the customer
-    cursor.execute('DELETE FROM customer WHERE customer_id = %s', (customer_id,))
+    # Archive the customer instead of deleting to preserve data integrity
+    cursor.execute('UPDATE customer SET is_archived = TRUE, archived_at = NOW() WHERE customer_id = %s', (customer_id,))
     db.commit()
 
-    flash('Customer deleted successfully!', 'danger')
+    flash('Customer archived successfully! Historical order data preserved.', 'warning')
     return redirect(url_for('customers.show_customers'))

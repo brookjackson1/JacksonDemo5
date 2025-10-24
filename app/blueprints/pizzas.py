@@ -25,8 +25,8 @@ def show_pizzas():
         flash('New pizza added successfully!', 'success')
         return redirect(url_for('pizzas.show_pizzas'))
 
-    # Handle GET request to display all pizzas
-    cursor.execute('SELECT * FROM pizza ORDER BY name, size')
+    # Handle GET request to display all non-archived pizzas
+    cursor.execute('SELECT * FROM pizza WHERE is_archived = FALSE ORDER BY name, size')
     all_pizzas = cursor.fetchall()
     return render_template('pizzas.html', all_pizzas=all_pizzas)
 
@@ -55,9 +55,9 @@ def delete_pizza(pizza_id):
     db = get_db()
     cursor = db.cursor()
 
-    # Delete the pizza
-    cursor.execute('DELETE FROM pizza WHERE pizza_id = %s', (pizza_id,))
+    # Archive the pizza instead of deleting to preserve data integrity
+    cursor.execute('UPDATE pizza SET is_archived = TRUE, archived_at = NOW() WHERE pizza_id = %s', (pizza_id,))
     db.commit()
 
-    flash('Pizza deleted successfully!', 'danger')
+    flash('Pizza archived successfully! Historical sales data preserved.', 'warning')
     return redirect(url_for('pizzas.show_pizzas'))

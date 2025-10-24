@@ -33,8 +33,8 @@ def show_orders():
     ''')
     all_orders = cursor.fetchall()
 
-    # Get all customers for the dropdown
-    cursor.execute('SELECT customer_id, name FROM customer ORDER BY name')
+    # Get all non-archived customers for the dropdown
+    cursor.execute('SELECT customer_id, name FROM customer WHERE is_archived = FALSE ORDER BY name')
     all_customers = cursor.fetchall()
 
     return render_template('orders.html', all_orders=all_orders, all_customers=all_customers)
@@ -101,8 +101,8 @@ def order_details(order_id):
     ''', (order_id,))
     order_details = cursor.fetchall()
 
-    # Get all pizzas for the dropdown
-    cursor.execute('SELECT pizza_id, name, size, price FROM pizza ORDER BY name, size')
+    # Get all non-archived pizzas for the dropdown
+    cursor.execute('SELECT pizza_id, name, size, price FROM pizza WHERE is_archived = FALSE ORDER BY name, size')
     all_pizzas = cursor.fetchall()
 
     # Calculate totals
