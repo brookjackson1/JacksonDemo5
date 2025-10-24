@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1><i class="fas fa-archive me-2"></i>Archived Pizzas</h1>
+        <a href="{{ url_for('pizzas.show_pizzas') }}" class="btn btn-primary">
+            <i class="fas fa-arrow-left me-2"></i>Back to Active Pizzas
+        </a>
+    </div>
+
+    {% if archived_pizzas %}
+    <div class="alert alert-info">
+        <i class="fas fa-info-circle me-2"></i>
+        These pizzas are archived but their historical sales data is preserved. You can restore them if needed.
+    </div>
+
+    <!-- Desktop Table -->
+    <div class="d-none d-md-block">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Pizza ID</th>
+                    <th>Name</th>
+                    <th>Size</th>
+                    <th>Price</th>
+                    <th>Cost</th>
+                    <th>Archived Date</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for pizza in archived_pizzas %}
+                <tr>
+                    <td>{{ pizza.pizza_id }}</td>
+                    <td>{{ pizza.name }}</td>
+                    <td>{{ pizza.size }}</td>
+                    <td>${{ "%.2f"|format(pizza.price) }}</td>
+                    <td>${{ "%.2f"|format(pizza.cost) }}</td>
+                    <td>{{ pizza.archived_at.strftime('%Y-%m-%d %H:%M') if pizza.archived_at else 'N/A' }}</td>
+                    <td>
+                        <form method="post" action="{{ url_for('pizzas.restore_pizza', pizza_id=pizza.pizza_id) }}" style="display: inline;">
+                            <button type="submit" class="btn btn-success btn-sm">
+                                <i class="fas fa-undo me-1"></i>Restore
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Mobile Card View -->
+    <div class="d-md-none">
+        {% for pizza in archived_pizzas %}
+        <div class="card mb-3">
+            <div class="card-body">
+                <h5 class="card-title">{{ pizza.name }} - {{ pizza.size }}</h5>
+                <p class="mb-1"><strong>ID:</strong> {{ pizza.pizza_id }}</p>
+                <p class="mb-1"><strong>Price:</strong> ${{ "%.2f"|format(pizza.price) }}</p>
+                <p class="mb-1"><strong>Cost:</strong> ${{ "%.2f"|format(pizza.cost) }}</p>
+                <p class="mb-1 small text-muted">
+                    <strong>Archived:</strong> {{ pizza.archived_at.strftime('%Y-%m-%d %H:%M') if pizza.archived_at else 'N/A' }}
+                </p>
+                <form method="post" action="{{ url_for('pizzas.restore_pizza', pizza_id=pizza.pizza_id) }}" class="mt-3">
+                    <button type="submit" class="btn btn-success btn-sm">
+                        <i class="fas fa-undo me-1"></i>Restore
+                    </button>
+                </form>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="alert alert-success">
+        <i class="fas fa-check-circle me-2"></i>
+        No archived pizzas. All pizzas are currently active!
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

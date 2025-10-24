@@ -2,10 +2,17 @@
 
 {% block content %}
 <div class="container mt-4">
-    <h1>Customers</h1>
-    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addCustomerModal">
-        Add New Customer
-    </button>
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h1>Customers</h1>
+        <div>
+            <button type="button" class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#addCustomerModal">
+                <i class="fas fa-plus me-2"></i>Add New Customer
+            </button>
+            <a href="{{ url_for('customers.archived_customers') }}" class="btn btn-secondary">
+                <i class="fas fa-archive me-2"></i>View Archived
+            </a>
+        </div>
+    </div>
 
     <!-- Table displaying all customers -->
     <table class="table table-striped mt-4">

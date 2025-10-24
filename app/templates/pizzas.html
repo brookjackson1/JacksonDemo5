@@ -2,10 +2,17 @@
 
 {% block content %}
 <div class="container mt-4">
-    <h1>Pizzas</h1>
-    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addPizzaModal">
-        Add New Pizza
-    </button>
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h1>Pizzas</h1>
+        <div>
+            <button type="button" class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#addPizzaModal">
+                <i class="fas fa-plus me-2"></i>Add New Pizza
+            </button>
+            <a href="{{ url_for('pizzas.archived_pizzas') }}" class="btn btn-secondary">
+                <i class="fas fa-archive me-2"></i>View Archived
+            </a>
+        </div>
+    </div>
 
     <!-- Desktop Table (hidden on mobile) -->
     <div class="d-none d-md-block">

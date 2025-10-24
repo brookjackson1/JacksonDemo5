@@ -59,3 +59,28 @@ def delete_customer(customer_id):
 
     flash('Customer archived successfully! Historical order data preserved.', 'warning')
     return redirect(url_for('customers.show_customers'))
+
+@customers.route('/archived')
+@login_required
+def archived_customers():
+    db = get_db()
+    cursor = db.cursor()
+
+    # Get all archived customers
+    cursor.execute('SELECT * FROM customer WHERE is_archived = TRUE ORDER BY archived_at DESC')
+    archived_customers = cursor.fetchall()
+
+    return render_template('archived_customers.html', archived_customers=archived_customers)
+
+@customers.route('/restore_customer/<int:customer_id>', methods=['POST'])
+@login_required
+def restore_customer(customer_id):
+    db = get_db()
+    cursor = db.cursor()
+
+    # Restore the customer by setting is_archived to FALSE
+    cursor.execute('UPDATE customer SET is_archived = FALSE, archived_at = NULL WHERE customer_id = %s', (customer_id,))
+    db.commit()
+
+    flash('Customer restored successfully!', 'success')
+    return redirect(url_for('customers.archived_customers'))

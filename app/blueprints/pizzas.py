@@ -61,3 +61,28 @@ def delete_pizza(pizza_id):
 
     flash('Pizza archived successfully! Historical sales data preserved.', 'warning')
     return redirect(url_for('pizzas.show_pizzas'))
+
+@pizzas.route('/archived')
+@login_required
+def archived_pizzas():
+    db = get_db()
+    cursor = db.cursor()
+
+    # Get all archived pizzas
+    cursor.execute('SELECT * FROM pizza WHERE is_archived = TRUE ORDER BY archived_at DESC')
+    archived_pizzas = cursor.fetchall()
+
+    return render_template('archived_pizzas.html', archived_pizzas=archived_pizzas)
+
+@pizzas.route('/restore_pizza/<int:pizza_id>', methods=['POST'])
+@login_required
+def restore_pizza(pizza_id):
+    db = get_db()
+    cursor = db.cursor()
+
+    # Restore the pizza by setting is_archived to FALSE
+    cursor.execute('UPDATE pizza SET is_archived = FALSE, archived_at = NULL WHERE pizza_id = %s', (pizza_id,))
+    db.commit()
+
+    flash('Pizza restored successfully!', 'success')
+    return redirect(url_for('pizzas.archived_pizzas'))
